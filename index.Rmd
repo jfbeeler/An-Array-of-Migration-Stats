@@ -1,0 +1,77 @@
+---
+title: US Immigration
+output:
+ html_document:
+   keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo= F, message = F, warning = F, fig.width = 7, fig.height = 7)
+
+library( leaflet )
+library( magrittr )
+library( htmltools )
+library( htmlwidgets )
+library( geojsonio )
+library( scales )
+library(sp)
+library (rgdal)
+library(rgeos)
+library(dplyr)
+library(ggmap)
+library(RColorBrewer)
+library(classInt)
+```
+
+```{r}
+setwd("/Users/beelerenator/Dropbox/Documents/MPA - MAIR/Career Services related/Summer 2017/HRW/Work Product")
+
+url_asylum <- "https://raw.githubusercontent.com/jfbeeler/Immigration-Research/master/asylum%20rate%20by%20judge%20by%20city.csv" 
+asylum_dat <- read.csv(url_asylum, stringsAsFactors=FALSE )
+asylum_dat$location <- paste(asylum_dat$City, asylum_dat$State, sep=", " )
+
+asylum.grouped <- group_by(asylum_dat, location)
+asylum.avg.location <- summarise(asylum.grouped, 
+Median.grants=median(X..Grants), Avg.Grants=mean(X..Grants), Avg.Denials=mean(X..Denials) )
+#asylum.lat.long <- geocode(asylum.avg.location$location)
+#asylum.lat.long <- asylum.lat.long[ c("lon","lat")]
+#asylum.avg.median <- cbind(asylum.avg.location, asylum.lat.long)
+#write.csv(asylum.lat.long, file = "asylum.lat.long.csv") 
+#write.csv(asylum.avg.median, file = "asylum.data.processed.csv")
+
+#import processed data
+url_asylum2 <- "https://raw.githubusercontent.com/jfbeeler/Immigration-Research/master/asylum.data.processed.csv" 
+asylum.avg.median <- read.csv(url_asylum2, stringsAsFactors=FALSE )
+asylum.avg.median$label.avg.grant <- asylum.avg.median$Avg.Grants/100
+asylum.avg.median$label.avg.grant <- round(asylum.avg.median$label.avg.grant, 2)
+
+#classIntervals(asylum.avg.median$Avg.Grants, n=5, style="quantile") 
+
+bins <- c(0, 15, 25, 40, 50, 55, 60, 70, 100)
+pal <- colorBin("RdYlBu", domain = asylum.avg.median$Avg.Grants, bins = bins)
+
+labels <- sprintf(
+  "<strong>%s</strong><br/>%s Approval",
+  asylum.avg.median$location, percent(asylum.avg.median$label.avg.grant), percent(asylum.avg.median$Median.grants) 
+) %>% lapply(htmltools::HTML)
+
+leaflet(asylum.avg.median) %>%
+   
+   addTiles() %>%
+  
+  addCircles(lng = ~lon, lat = ~lat, weight = 1,
+    radius = ~sqrt(Avg.Grants) * 10000, fillColor = ~pal(Avg.Grants), fillOpacity = 0.8, opacity= .6, color ="#030100", label=labels
+  ) %>%
+  
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  
+   setView( lng = -96.723885, lat = 39.535458
+           , zoom = 4) %>%
+  
+addLegend(pal = pal, values = ~Avg.Grants, opacity = 0.7,
+  position = "bottomright", title = "Average Asylum Approval", labFormat = labelFormat(suffix = "%"))
+
+#saveWidget(widget = map, file="your_map.html", selfcontained = FALSE)
+
+
+```
