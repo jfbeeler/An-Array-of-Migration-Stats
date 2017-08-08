@@ -1,12 +1,18 @@
 ---
-title: US Immigration
+title: Migration Stats and Graphs
 output:
  html_document:
    keep_md: true
+   df_print: paged
+   theme: paper
+   highlight: haddock
+   toc: yes
+   toc_float: yes
+   
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo= F, message = F, warning = F, fig.width = 7, fig.height = 7)
+knitr::opts_chunk$set(echo= F, message = F, warning = F, fig.width = 8, fig.height = 5)
 
 library( leaflet )
 library( magrittr )
@@ -22,7 +28,7 @@ library(ggmap)
 library(RColorBrewer)
 library(classInt)
 ```
-
+### Asylum Approval Averages by Immigration Court from FY 2011-2016
 ```{r}
 setwd("/Users/beelerenator/Dropbox/Documents/MPA - MAIR/Career Services related/Summer 2017/HRW/Work Product")
 
@@ -66,10 +72,11 @@ leaflet(asylum.avg.median) %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
   
    setView( lng = -96.723885, lat = 39.535458
-           , zoom = 4) %>%
+           , zoom = 4)
+#%>%
   
-addLegend(pal = pal, values = ~Avg.Grants, opacity = 0.7,
-  position = "bottomright", title = "Average Asylum Approval", labFormat = labelFormat(suffix = "%"))
+#addLegend(pal = pal, values = ~Avg.Grants, opacity = 0.7,
+  #position = "bottomright", title = "Average Asylum Approval", labFormat = labelFormat(suffix = "%"))
 
 #saveWidget(widget = map, file="your_map.html", selfcontained = FALSE)
 
