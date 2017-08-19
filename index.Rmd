@@ -85,5 +85,5 @@ leaflet(asylum.avg.median) %>%
 
 
 ```
-National Average: 33.6%  
+National Average: 33.6% | New York, NY: 78.9% (highest) | El Paso, TX: 3% (lowest)   
 Source: TRAC, Syracuse University "Judge-by-Judge Asylum Decisions in Immigration Courts FY 2011-2016"
