@@ -1,5 +1,5 @@
 ---
-title: Migration Maps and Stats
+title:  <span style="color:steelblue"> An Unfinished Compilation of Migration Maps </span>
 output:
  html_document:
    keep_md: true
@@ -29,9 +29,12 @@ library(RColorBrewer)
 library(classInt)
 library(leaflet.extras)
 ```
-### **Variation in Asylum Approvals by Immigration Court (FY 2011-2016)**
+&nbsp;
+&nbsp;
 
-#####Hover over the city to see that Immigration Court's average asylum approval rate
+###**Variation in Asylum Approvals by Immigration Court (FY 2011-2016)**
+
+#####Hover over to see that Immigration Court's average asylum approval rate
 ```{r}
 #setwd("/Users/beelerenator/Dropbox/Documents/MPA - MAIR/Career Services related/Summer 2017/HRW/Work Product")
 
